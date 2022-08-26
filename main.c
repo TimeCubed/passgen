@@ -1,6 +1,5 @@
-    #include "str2int.h"
+#include "strtoi.h"
 #include <stdio.h>
-#include <stdlib.h>
 #include <time.h>
 
 #define CAPITALS "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -10,17 +9,15 @@
 #define SPECIALS "!#$@&"
 #define ALLCHARS ALPHABET NUMBERS SPECIALS
 
-int passlength, errcode, bytes;
+int passlength;
 char* characters;
-int numinclude = 0, specialinclude = 0, alphainclude = 0, capitalinclude = 0, smallinclude = 0;
 
 int main(int argc, char* argv[]) {
     characters = (char*) malloc(1);
     srand(time(NULL));
     if (argc > 1) {
-        passlength = str2int(argv[1]);
-        errcode = errorCheck();
-        if (errcode != 0) {
+        passlength = strtoi(argv[1]);
+        if (errorCheck() != 0) {
             printf("passgen %s\n", argv[1]);
             printf("        ^ Here\n");
             printf("Invalid input for integer");
@@ -59,10 +56,9 @@ int main(int argc, char* argv[]) {
                     size_t len = strlen(data[j].text);
                     char *temp = realloc(characters, total_len + len + 1);
 
-                    if (temp == NULL)
-                    {
+                    if (temp == NULL) {
                         perror("realloc");
-                        exit(EXIT_FAILURE);
+                        exit(1);
                     }
                     characters = temp;
                     memcpy(characters + total_len, data[j].text, len);
@@ -77,9 +73,9 @@ int main(int argc, char* argv[]) {
     }
     characters = (char*) realloc(characters, 68);
     characters = ALLCHARS;
-    generate:
+generate:
     printf("Generating password with length %d\n", passlength);
     for (int x = 0; x < passlength; x++){
-        printf("%c", characters[rand() % ((int) strlen(characters))]);
+        printf("%c", characters[rand() % strlen(characters)]);
     }
 }
