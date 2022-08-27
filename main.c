@@ -13,7 +13,7 @@ int passlength;
 char* characters;
 
 int main(int argc, char* argv[]) {
-    characters = (char*) malloc(1);
+    characters = (char*) malloc(1024);
     srand(time(NULL));
     if (argc > 1) {
         passlength = strtoi(argv[1]);
@@ -21,6 +21,12 @@ int main(int argc, char* argv[]) {
             printf("passgen %s\n", argv[1]);
             printf("        ^ Here\n");
             printf("Invalid input for integer");
+            return 0;
+        }
+        if (passlength >= 1024) {
+            printf("passgen %s\n", argv[1]);
+            printf("        ^ Here\n");
+            printf("Password length cannot exceed 1024 (why do you need a password that long?)");
             return 0;
         }
     } else {
@@ -54,13 +60,6 @@ int main(int argc, char* argv[]) {
             for (size_t j = 0; j < dicts; j++) {
                 if ((data[j].used == 0) && (strcmp(argv[i], data[j].dict) == 0)) {
                     size_t len = strlen(data[j].text);
-                    char *temp = realloc(characters, total_len + len + 1);
-
-                    if (temp == NULL) {
-                        perror("realloc");
-                        exit(1);
-                    }
-                    characters = temp;
                     memcpy(characters + total_len, data[j].text, len);
                     total_len += len;
                     characters[total_len] = '\0';
